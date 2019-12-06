@@ -154,7 +154,7 @@ def read_local_file_keys():
         if len(lineList) == 5:
             res['src'] = lineList[4]
         else:
-            res['src'] = 'all'
+            res['src'] = 'home'
         res['keys'] = keys
         res['ignores'] = ignores
         finalRes.append(res);
@@ -163,11 +163,20 @@ def read_local_file_keys():
 
 def send_mail(data):
     #文件正文
-    dataStr  = '''# %s <br>[详情](%s) 
-<br>[去购买](%s) 
-<br> <a src="%s">Buy!</a> 
-<br>  Source:%s 
-<br> <img href="%s" alt="logo">'''%(data['title'],data['page_url'],data['link'],data['matched_rule'],data['source'],data['pic_url'])
+    dataStr  = '''<html>
+<body>
+<h1>%s</h1>
+<a href="%s"> 打开SMZDM页面</a>
+<a href="%s"> 直接去购买</a>
+
+<h3>Rule:%s</h3>
+<h3>Source:%s</h3>
+<img loading="lazy" src="%s" class="avatar" border="0" align="default">
+
+</body>
+</html>
+
+'''%(data['title'],data['page_url'],data['link'],data['matched_rule'],data['source'],data['pic_url'])
     title = result['price']+"|"+result['title']
     Util.send_mail(target_mail_address,title,dataStr);
 
@@ -282,10 +291,10 @@ if __name__ == '__main__':
                 if not is_data_existed(md5Res):
                     #如果结果命中并且没有推送过
                     #推送微信
-                    push_wechat(result)
+                    #push_wechat(result)
                     #插入mongo/mysql
                     insert_data(result)
-                    #send_mail(result)
+                    send_mail(result)
                 else:
                     isExisted = True
             #Log
